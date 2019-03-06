@@ -1,17 +1,21 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './semantic-dist/semantic.css'
-import Seed from './seed'
+import {getBooks} from './api/get-books'
+//import Seed from './seed'
 
 class BookList extends React.Component {
   state = {books:[]}
 
   componentDidMount(){
-    this.setState({books:Seed.books})
+    getBooks((books)=>{
+      console.log(books)
+      this.setState({books:books.book_list})
+    })
   }
   handleBookUpVote = (bookId)=>{
       console.log(bookId + " upvoted ")
       const updatedBooks = this.state.books.map((book)=>{
-            if (book.id == bookId){
+            if (book.id === bookId){
               return Object.assign({},book,{votes:book.votes + 1})
             }
             else {
@@ -27,10 +31,10 @@ class BookList extends React.Component {
     const BookComponent = books.map((book)=>(        
       <Book 
         bookImageUrl={book.BookImageUrl}
-        id={book.id}
+        id={book._id}
         title={book.title}
-        author={book.author}
-        description={book.description}
+        author={book.author.name}
+        description={book.summary}
         votes={book.votes}
         onVote={this.handleBookUpVote}
         />))

@@ -1,8 +1,12 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './semantic-dist/semantic.css'
+
 
 class BookForm extends React.Component {
     render() {
+      const authorLOV = this.props.authors.map((author)=>(
+        <option>{author.name}</option>
+      ))
       const submitText = this.props.title ? 'Update' : 'Create';
       return (
         <div className='ui centered card'>
@@ -14,7 +18,7 @@ class BookForm extends React.Component {
               </div>
               <div className='field'>
                 <label>Author</label>
-                <input type='text' defaultValue={this.props.author} />
+                <select>{authorLOV}</select>
               </div>
               <div className='field'>
                 <label>Description</label>

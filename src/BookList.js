@@ -1,36 +1,18 @@
 import React from 'react';
 import './semantic-dist/semantic.css'
-import {getBooks} from './api/get-books'
-//import Seed from './seed'
 
 class BookList extends React.Component {
-  state = {books:[]}
 
-  componentDidMount(){
-    getBooks((books)=>{
-      console.log(books)
-      this.setState({books:books.book_list})
-    })
-  }
   handleBookUpVote = (bookId)=>{
-      console.log(bookId + " upvoted ")
-      const updatedBooks = this.state.books.map((book)=>{
-            if (book.id === bookId){
-              return Object.assign({},book,{votes:book.votes + 1})
-            }
-            else {
-              return book;
-            }  
-      })
-      this.setState({books:updatedBooks})
+      this.props.handleVote(bookId)
   };
   render() {
-    const books = this.state.books.sort((a,b)=>(
+    const books = this.props.books.sort((a,b)=>(
         b.votes - a.votes
     ));
     const BookComponent = books.map((book)=>(        
-      <Book 
-        bookImageUrl={book.BookImageUrl}
+      <Book key = {book._id}
+        bookImageUrl="images/book-covers/my-book.jpg"
         id={book._id}
         title={book.title}
         author={book.author.name}
@@ -58,13 +40,13 @@ class Book extends React.Component {
           <img className='ui small image' src={this.props.bookImageUrl}/>
         </div>
         <div className="middle aligned content">
-          <a className="header">{this.props.title}</a>
+          <p className="header">{this.props.title}</p>
           <a onClick={this.handleUpVote}>
             <i className='large caret up icon' />
           </a>
           {this.props.votes}
           <div className="Meta">
-            <a>{this.props.author}</a>
+            <a href="/authors">{this.props.author}</a>
           </div>
           <div className="description">
             <p>{this.props.description}</p> 

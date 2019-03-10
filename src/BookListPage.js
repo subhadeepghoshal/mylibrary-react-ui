@@ -5,6 +5,8 @@ import BookForm from './BookForm'
 import {getAuthors} from './api/get-authors'
 import {addBook} from './api/add-book'
 import {getBooks} from './api/get-books'
+import {deleteBook} from './api/delete-book'
+
 
 class BookListPage extends React.Component {
     state = {books:[],authors:[]}
@@ -42,17 +44,29 @@ class BookListPage extends React.Component {
         });
     };
 
+    deleteBook = (book) => {
+        console.log(book)
+        deleteBook(book.id);
+        var array = [...this.state.books]; // make a separate copy of the array
+        var index = array.indexOf(book.id)
+        if (index !== -1) {
+          array.splice(index, 1);
+          this.setState({books: array});
+        }   
+    };
+
     render(){
         return (
             <div className = "ui three column centered grid">
                 <TogglableBookForm 
-                    isOpen="false"
+                    isOpen="False"
                     createBook={this.createBook}
                     authors={this.state.authors}
                 />
                 <BookList 
                     books={this.state.books}
                     handleVote={this.handleBookUpVote}
+                    deleteBook ={this.deleteBook}
                 />
             </div>
         );
@@ -77,11 +91,12 @@ class TogglableBookForm extends React.Component {
     
     handleCreateFormSubmit = (book) => {
         this.props.createBook(book);
+        this.handleFormClose();
     };
 
     addBook = (book) => {
         this.props.createBook(book)
-    };
+    };   
 
     render(){
         if (this.state.isOpen){
@@ -91,7 +106,7 @@ class TogglableBookForm extends React.Component {
                 authors={this.props.authors} 
                 book={{}}
                 createBook ={this.addBook}
-            />)
+                />)
         } else {
             return (<div className='ui basic content center aligned segment'>
                 <button className='ui basic button icon' onClick={this.handleFormOpen}>
